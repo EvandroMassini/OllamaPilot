@@ -1,0 +1,16 @@
+# Bytecode e ambientes locais
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Compilação e o executável gerado nesta máquina
+build/
+release/
+dist/
+
+# Conversas, chaves e registros desta instalação
+storage/
+
+# Material de teste e avaliação, fora do que o programa precisa para rodar
+_avaliacao/

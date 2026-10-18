@@ -1,0 +1,10 @@
+OllamaPilot 0.0.1
+
+Mantenha nesta pasta o OllamaPilot.exe e a pasta _internal. Os dois andam juntos. Na primeira execução o programa cria a pasta storage ao lado do executável. É nela que ficam configurações, conversas e cópias para desfazer. Esta pasta não vem no pacote.
+
+Abra Configurações e informe a URL do Ollama. Em Modelos, escolha Somente modelos locais ou Locais e online. A segunda opção pede a chave de API gerada no site do Ollama. A pasta do Ghidra, se for usar análise, é a que contém support\analyzeHeadless.bat.
+
+O caminho de arquivos sai da conversa. Não há pasta padrão. Toda ação que altera a máquina, executa um programa, mexe numa janela ou chama o Ghidra pede autorização num cartão.
+
+O código-fonte desta versão está em https://github.com/EvandroMassini/OllamaPilot
+Licença: GNU Affero General Public License v3. O texto está em LICENSE, nesta pasta.
