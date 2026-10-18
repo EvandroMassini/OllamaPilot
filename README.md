@@ -1,6 +1,6 @@
 # OllamaPilot
 
-Versão **0.0.1**. Agente local para Windows que conversa com um servidor [Ollama](https://ollama.com). A janela é do programa. O modelo lê e grava arquivos, executa programas instalados, age sobre as janelas deles e, quando você tem direito sobre o arquivo, analisa um executável com o Ghidra.
+Versão **0.0.2**. Agente local para Windows que conversa com um servidor [Ollama](https://ollama.com). A janela é do programa. O modelo lê e grava arquivos, executa programas instalados, age sobre as janelas deles e, quando você tem direito sobre o arquivo, analisa um executável com o Ghidra.
 
 OllamaPilot não escolhe uma pasta sozinho. O caminho absoluto vai na conversa, por exemplo `E:\laboratorio`. O que altera o computador passa por um cartão de autorização antes de acontecer.
 
@@ -8,7 +8,7 @@ Licença: [GNU Affero General Public License v3](LICENSE). Copyright (C) 2026 Ev
 
 ## Usar o executável
 
-Na página de [releases](https://github.com/EvandroMassini/OllamaPilot/releases/tag/v0.0.1), baixe `OllamaPilot-0.0.1-windows-x64.zip`, extraia a pasta e abra `OllamaPilot.exe`.
+Na página de [releases](https://github.com/EvandroMassini/OllamaPilot/releases/tag/v0.0.2), baixe `OllamaPilot-0.0.2-windows-x64.zip`, extraia a pasta e abra `OllamaPilot.exe`.
 
 Deixe `OllamaPilot.exe` e a pasta `_internal` no mesmo lugar. Separar os dois impede o programa de abrir. O pacote não traz conversas, chaves nem a pasta `storage`: ela é criada na primeira execução, ao lado do executável.
 
@@ -30,7 +30,7 @@ Sem a capacidade de ferramentas, o modelo responde só com texto. Sem visão, a 
 - Biblioteca com embeddings. Se o modelo de embedding não estiver no servidor, a busca continua por texto.
 - PostgreSQL em três modos: desligado, somente leitura, ou leitura e escrita. O banco das configurações é o padrão e pode ficar vazio. Outro banco pede confirmação. Escrita só existe no modo leitura e escrita, e o cartão mostra o SQL.
 - Pesquisa web opcional, pela API do Ollama.
-- Arquivos gerados na biblioteca interna: TXT, Markdown, CSV, JSON, XML, HTML, código, PDF, DOCX, XLSX e ZIP.
+- PDF, DOCX, XLSX e ZIP no caminho dito na conversa, com título, seções, listas e tabelas. Sem caminho, o arquivo fica em Arquivos gerados por 24 horas. Texto, Markdown, CSV, JSON, XML, HTML e código também podem ser gerados.
 - Exportação da conversa em Markdown.
 
 ## Autorização

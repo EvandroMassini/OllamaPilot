@@ -166,6 +166,61 @@ class ToolPolicyTests(unittest.TestCase):
                 created = CreateArtifact(Settings()).run({"nome": "nota.txt", "conteudo": "sala limpa"})
             self.assertEqual(Path(created["caminho"]).read_text(encoding="utf-8"), "sala limpa")
 
+    def test_structured_documents_follow_the_prompt_path(self) -> None:
+        from docx import Document
+        from openpyxl import load_workbook
+        from pypdf import PdfReader
+
+        from ollamapilot.tools.filesystem import WriteFile
+
+        document = {
+            "titulo": "Relatório de garantia",
+            "blocos": [
+                {"tipo": "titulo", "texto": "Prazos", "nivel": 2},
+                {"tipo": "paragrafo", "texto": "A cobertura não inclui mau uso."},
+                {"tipo": "lista", "itens": ["peças", "mão de obra"]},
+                {"tipo": "tabela", "colunas": ["Item", "Dias"], "linhas": [["Garantia", 10]]},
+            ],
+        }
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            pdf_path = root / "relatorio.pdf"
+            created = CreateArtifact(Settings()).run(
+                {"nome": "relatorio.pdf", "caminho": str(pdf_path), "documento": document}
+            )
+            self.assertEqual(created["formato"], "pdf")
+            text = "\n".join(page.extract_text() or "" for page in PdfReader(str(pdf_path)).pages)
+            self.assertIn("Relatório de garantia", text)
+            self.assertIn("não inclui", text)
+            self.assertIn("Garantia", text)
+
+            docx_path = root / "relatorio.docx"
+            CreateArtifact(Settings()).run({"nome": "relatorio.docx", "caminho": str(docx_path), "documento": document})
+            book = Document(str(docx_path))
+            self.assertEqual(book.paragraphs[0].text, "Relatório de garantia")
+            self.assertEqual(book.tables[0].rows[1].cells[1].text, "10")
+
+            xlsx_path = root / "planilha.xlsx"
+            CreateArtifact(Settings()).run(
+                {
+                    "nome": "planilha.xlsx",
+                    "caminho": str(xlsx_path),
+                    "documento": {
+                        "abas": [
+                            {"nome": "Vendas", "colunas": ["Item", "Qtd"], "linhas": [["Caneta", 2]]},
+                            {"nome": "Notas", "colunas": ["Texto"], "linhas": [["ok"]]},
+                        ]
+                    },
+                }
+            )
+            workbook = load_workbook(xlsx_path)
+            self.assertEqual(workbook.sheetnames, ["Vendas", "Notas"])
+            self.assertEqual(workbook["Vendas"]["B2"].value, 2)
+            self.assertEqual(workbook["Vendas"]["A1"].value, "Item")
+
+            with self.assertRaises(ValueError):
+                WriteFile(Settings()).run({"caminho": str(root / "errado.pdf"), "conteudo": "texto"})
+
 
 class AgentLoopTests(unittest.TestCase):
     def test_once_asks_again_and_chat_grant_persists(self) -> None:

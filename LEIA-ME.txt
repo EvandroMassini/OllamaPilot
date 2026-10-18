@@ -1,4 +1,4 @@
-OllamaPilot 0.0.1
+OllamaPilot 0.0.2
 
 Mantenha nesta pasta o OllamaPilot.exe e a pasta _internal. Os dois andam juntos. Na primeira execução o programa cria a pasta storage ao lado do executável. É nela que ficam configurações, conversas e cópias para desfazer. Esta pasta não vem no pacote.
 

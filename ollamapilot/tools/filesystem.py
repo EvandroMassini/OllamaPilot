@@ -347,6 +347,7 @@ class WriteFile(Tool):
     scope_label = "gravar, editar, criar pasta e desfazer arquivos"
     description = (
         "Cria ou substitui por inteiro um arquivo de texto no caminho absoluto pedido, criando as pastas que faltarem. "
+        "Não gera PDF, DOCX, XLSX nem ZIP: para esses formatos use criar_arquivo com caminho e documento. "
         "Use para arquivo novo. Para mudar um trecho de um arquivo existente, use aplicar_patch ou editar_arquivo. "
         "Recusa regravação que encurta demais o arquivo ou que traz reticências no lugar do código. "
         "Pede autorização e guarda a versão anterior para desfazer_alteracao. Retorno: {caminho, bytes, criado}."
@@ -370,6 +371,7 @@ class WriteFile(Tool):
         self._check_size(content)
         if path.is_dir():
             raise ValueError("Esse caminho é uma pasta. Informe o arquivo.")
+        _refuse_office(path)
         replacing = path.is_file()
         action = "Substituir" if replacing else "Criar"
         if replacing and path.stat().st_size > undo.MAX_FILE_BYTES:
@@ -388,6 +390,7 @@ class WriteFile(Tool):
 
     def run(self, arguments: dict) -> dict:
         path = resolve_path(arguments.get("caminho"))
+        _refuse_office(path)
         content = str(arguments.get("conteudo") or "")
         self._check_size(content)
         if path.is_dir():
@@ -797,6 +800,14 @@ def _line_of(content: str, search: str) -> int:
 _PLACEHOLDER = re.compile(
     r"(?i)(\.\.\.|resto do (código|codigo|arquivo)|código (inalterado|omitido)|unchanged|rest of (the )?(file|code))"
 )
+
+
+def _refuse_office(path: Path) -> None:
+    if path.suffix.lower() in {".pdf", ".docx", ".xlsx", ".zip"}:
+        raise ValueError(
+            "PDF, DOCX, XLSX e ZIP não são texto puro. "
+            "Chame criar_arquivo com nome, caminho e documento."
+        )
 
 
 def _too_short(old: str, new: str) -> bool:
